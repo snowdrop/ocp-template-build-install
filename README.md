@@ -39,7 +39,7 @@
 
   **Remark** : Command to be used to create the buildconfig is `oc new-build --docker-image=fabric8/s2i-java:latest --binary=true --strategy=source --to=spring-boot-rest-http:1.5.13-1`
 
-- C. Using a Pipeline - Jenkinsfile as Source strategy to delegate the responsability of the build on the cloud platform
+- C. Using a Pipeline - Jenkinsfile as Source strategy to delegate the responsibility of the build on the cloud platform
 
   ```bash
   oc delete svc,is,bc,dc,route,template spring-boot-rest-http
