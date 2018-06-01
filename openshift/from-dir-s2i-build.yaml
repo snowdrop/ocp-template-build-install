@@ -11,6 +11,11 @@ metadata:
     description: >-
       The REST API Level 0 Mission provides a basic example of mapping business operations to a remote procedure call endpoint over HTTP using a REST framework.
 parameters:
+- name: SOURCE_REPOSITORY_DIR
+  description: The location within the source repo of the application
+  displayName: Source Directory
+  value: .
+  required: true
 - name: ARTIFACT_COPY_ARGS
   description: Syntax to be used to copy uberjar files to the target directory
   displayName: Copy Args
@@ -65,16 +70,16 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: 's2i-java:latest'
-          env:
-          - name: MAVEN_ARGS_APPEND
-            value: "-pl ${SOURCE_REPOSITORY_DIR}"
-          - name: ARTIFACT_DIR
-            value: "${SOURCE_REPOSITORY_DIR}/target"
-          - name: MAVEN_MIRROR_URL
-            value: "${MAVEN_MIRROR_URL}"
-          - name: ARTIFACT_COPY_ARGS
-            value: "${ARTIFACT_COPY_ARGS}"
+          name: 'runtime:latest'
+        env:
+        - name: MAVEN_ARGS_APPEND
+          value: "-pl ${SOURCE_REPOSITORY_DIR}"
+        - name: ARTIFACT_DIR
+          value: "${SOURCE_REPOSITORY_DIR}/target"
+        - name: MAVEN_MIRROR_URL
+          value: "${MAVEN_MIRROR_URL}"
+        - name: ARTIFACT_COPY_ARGS
+          value: "${ARTIFACT_COPY_ARGS}"
       type: Source
 - apiVersion: v1
   kind: Service
