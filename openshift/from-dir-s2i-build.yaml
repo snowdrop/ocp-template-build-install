@@ -16,11 +16,9 @@ parameters:
   displayName: Source Directory
   value: .
   required: true
-- name: ARTIFACT_COPY_ARGS
-  description: Syntax to be used to copy uberjar files to the target directory
-  displayName: Copy Args
-  value: '*-exec.jar'
-  required: true
+- name: S2I_SOURCE_DEPLOYMENTS_FILTER
+  description: To specify artifact type
+  value: '*.jar'
 - name: GITHUB_WEBHOOK_SECRET
   description: A secret string used to configure the GitHub webhook.
   displayName: GitHub Webhook Secret
@@ -88,8 +86,8 @@ objects:
           value: "${SOURCE_REPOSITORY_DIR}/target"
         - name: MAVEN_MIRROR_URL
           value: "${MAVEN_MIRROR_URL}"
-        - name: ARTIFACT_COPY_ARGS
-          value: "${ARTIFACT_COPY_ARGS}"
+        - name: S2I_SOURCE_DEPLOYMENTS_FILTER
+          value: "${S2I_SOURCE_DEPLOYMENTS_FILTER}"
       type: Source
 - apiVersion: v1
   kind: Service
