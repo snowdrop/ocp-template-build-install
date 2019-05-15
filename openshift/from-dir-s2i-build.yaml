@@ -76,8 +76,6 @@ objects:
         from:
           kind: ImageStreamTag
           name: 'runtime:latest'
-        pullSecret:
-          name: 10977452-snowdrop-pull-secret
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND

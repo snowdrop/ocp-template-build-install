@@ -65,7 +65,5 @@
   ```bash
   oc delete svc,is,bc,dc,route,template spring-boot-rest-http
   oc delete is runtime
+  oc delete secret 10977452-snowdrop-pull-secret
   ```
-  
-  
-<fabric8.generator.from>fabric8/s2i-java:latest</fabric8.generator.from> 
