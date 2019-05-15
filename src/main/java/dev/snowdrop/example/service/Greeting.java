@@ -13,9 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.openshift.booster.service;
+package dev.snowdrop.example.service;
 
+// tag::snippet-greeting[]
 public class Greeting {
+
+    public static final String FORMAT = "Hello, %s!";
 
     private final String content;
 
@@ -31,3 +34,4 @@ public class Greeting {
         return content;
     }
 }
+// end::snippet-greeting[]

@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package dev.snowdrop.example;
 
-package io.openshift.booster.service;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class LocalTest extends AbstractExampleApplicationTest {
 
-@Component
-@ConfigurationProperties("greeting")
-public class GreetingProperties {
+    @Value("${local.server.port}")
+    private int port;
 
-    private String message = "Hello, %s!";
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    @Override
+    public String baseURI() {
+        return String.format("http://localhost:%d", port);
     }
 }

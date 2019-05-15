@@ -66,3 +66,6 @@
   oc delete svc,is,bc,dc,route,template spring-boot-rest-http
   oc delete is runtime
   ```
+  
+  
+<fabric8.generator.from>fabric8/s2i-java:latest</fabric8.generator.from> 
