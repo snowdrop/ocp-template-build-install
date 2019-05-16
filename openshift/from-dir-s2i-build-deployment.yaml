@@ -16,9 +16,11 @@ parameters:
   displayName: Source Directory
   value: .
   required: true
-- name: S2I_SOURCE_DEPLOYMENTS_FILTER
-  description: To specify artifact type
+- name: ARTIFACT_COPY_ARGS
+  description: Syntax to be used to copy uberjar files to the target directory
+  displayName: Copy Args
   value: '*.jar'
+  required: true
 - name: GITHUB_WEBHOOK_SECRET
   description: A secret string used to configure the GitHub webhook.
   displayName: GitHub Webhook Secret
@@ -29,14 +31,11 @@ parameters:
   description: Maven Nexus Repository to be used during build phase
   displayName:
   required: false
+- name: NAMESPACE
+  description: User's namespace
+  displayName: User's namespace
+  value: demo
 objects:
-- apiVersion: v1
-  kind: Secret
-  metadata:
-    name: 10977452-snowdrop-pull-secret
-  data:
-    .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5yZWRoYXQuaW8iOnsiYXV0aCI6Ik1UQTVOemMwTlRKOGMyNXZkMlJ5YjNBNlpYbEthR0pIWTJsUGFVcFRWWHBWZUUxcFNqa3VaWGxLZW1SWFNXbFBhVWt5V1ZkV2JGcFVRbWhPVjAwMFQwUkZNRTR5Um14WlZFbDZUV3BKTlUxVVJUTk9SR2hwVFcxRmVVMXBTamt1YVVVMllVbGZPRGhDV1MxVVFWZG9lazAzTkVzMVkyTkNNVUpwVGtGM2JGTmFZVmxUUlZsa2FtZHlNVlozWlU1NFVFeFZOVGhGV1dZMVduZzBObVJXWVZZdFEzSkxOM2Q2ZUVsaU5IUllWa05MUTBScVdVWXpNVVF3Y0hkM2FsRTBUbkJRZUROSkxUWldMVTlNVG5aM1luRTRRMmhaVVhoSFdFNVpjVkYxVlhsM01FUnFVR3RUZURRM1gyNTJUa3RMY1ZOTGJuSjJOUzExZEZKNWNXeFdWMGxXUVRGZloxcGpZMVJCVTJsRFlUaGxXalZ2YjFaWmJqZHZUbDh0YW1ZNGFHNWhkbGs1UmtGRk9GZElkMHBRTTJNNVpXTnRlQzB4UWt4eGVVMXhWVzFuVjFoTE9XRldhRUZKVm5kalJteHhVVWhaTTNSbk1ESkZiME5WYm14MVZESmhhbk5CUms1U1pIcGxkbFpMT1ZKTlluaEtVV0pwVVVSSWNYRm9VRWRCT0dkR1dETkpTRTUzU21oaGJYUkZVRUZMYlhkWVgxcEZWWEpTV2pCM05IZzJYMHRWTmpoQ01FWjFaV0ZNY0VsSWFWOXlPVVJ2WWpKWFRqSnZSbGMzVkdGalptRkNSSHBZVW5kak4xQjNRbWcxTldWalRWQXdTbWd0WjBOT1luaEhkWFkyVFZGMlUxbzRWR3BVVGxCNlNuTnphSGhEYUdsb1NHc3ljVFJwWkdWT1VFOU5Obmw1YmpSd1YxTlZTek5CWW5aVWFFZE9abVJFTkhCT1dYQnZUbkZVYzE4elNraEZWMWh6TUVwb1VHRjFkbWhhTWpsclIwRnRNek51U201RmFETjFaV3RKYVZCbVdWQkVSMUIyWTFKaWNEVTVlazVSVERBMWIzVjNVRmQ1UlU1Rk16QTBlbkEyYUZKTExXZE9TMk5FUVU5U1dtUkNTSFV3ZUVsSlNVZHBYMVpWYUc1UVpWWndOMkpIUkhBemEyVXpWRkpSWW14RWRrRkdTbkZVU25kUGJVdE9kbEp0YUVSS2JESTBWRFZHVjBoc2QyZFdUa051Wm5vMGFsRTJka1Y2YTNKWVZHZGlXbkZtVjNKSFF6VkhUMVV0UkVwaFNFTnVTek5QU1RkbloxVlJjRzFtT1c5QlRrWmpUMlozYlRkNlRYVnhiMEp3WWkxSWRuRlNiMGN6YmxKT1JtSTVWRzg9In19fQ==
-  type: kubernetes.io/dockerconfigjson
 - apiVersion: v1
   kind: BuildConfig
   metadata:
@@ -49,7 +48,7 @@ objects:
     output:
       to:
         kind: DockerImage
-        name: spring-boot-rest-http:2.1.3
+        name: docker-registry.default.svc:5000/${NAMESPACE}/spring-boot-rest-http:2.1.3
     postCommit: {}
     resources: {}
     runPolicy: Serial
@@ -60,7 +59,7 @@ objects:
       sourceStrategy:
         from:
           kind: DockerImage
-          name: registry.redhat.io/openjdk/openjdk-11-rhel8
+          name: registry.access.redhat.com/redhat-openjdk-18/openjdk18-openshift
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
@@ -69,8 +68,8 @@ objects:
           value: "${SOURCE_REPOSITORY_DIR}/target"
         - name: MAVEN_MIRROR_URL
           value: "${MAVEN_MIRROR_URL}"
-        - name: S2I_SOURCE_DEPLOYMENTS_FILTER
-          value: "${S2I_SOURCE_DEPLOYMENTS_FILTER}"
+        - name: ARTIFACT_COPY_ARGS
+          value: "${ARTIFACT_COPY_ARGS}"
       type: Source
 - apiVersion: v1
   kind: Service
@@ -148,8 +147,6 @@ objects:
               initialDelaySeconds: 180
           securityContext:
             privileged: false
-        imagePullSecrets:
-          - name: 10977452-snowdrop-pull-secret
 - apiVersion: v1
   kind: Route
   metadata:
