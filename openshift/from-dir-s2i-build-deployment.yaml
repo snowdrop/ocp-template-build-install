@@ -90,25 +90,27 @@ objects:
       app: spring-boot-rest-http
       provider: snowdrop
       group: io.openshift.booster
-- apiVersion: v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: spring-boot-rest-http
       provider: snowdrop
-      version: "2.1.3-1"
+      version: "2.1.3"
       group: io.openshift.booster
     name: spring-boot-rest-http
   spec:
     replicas: 1
     selector:
-      app: spring-boot-rest-http
-      provider: snowdrop
-      group: io.openshift.booster
+      matchLabels:
+        app: spring-boot-rest-http
+        provider: snowdrop
+        group: io.openshift.booster
     strategy:
-      rollingParams:
-        timeoutSeconds: 3600
-      type: Rolling
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 1
+      type: RollingUpdate
     template:
       metadata:
         labels:
