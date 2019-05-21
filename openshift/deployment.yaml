@@ -16,7 +16,7 @@ spec:
     app: spring-boot-rest-http
     provider: snowdrop
 ---
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
