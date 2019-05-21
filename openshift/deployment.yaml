@@ -64,12 +64,12 @@ spec:
             port: 8080
             scheme: HTTP
           initialDelaySeconds: 10
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 180
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 180
         securityContext:
           privileged: false
 ---
